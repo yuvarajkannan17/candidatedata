@@ -19,7 +19,7 @@ const Header = ({ userName }) => {
         </div>
 
         {/* Middle: Title */}
-        <Navbar.Brand className="mx-auto">Candidate Data</Navbar.Brand>
+        <Navbar.Brand className="mx-auto">Chiselon Recruitment Prcoess Outsourcing</Navbar.Brand>
 
         {/* Right side: User Avatar */}
         <div className="user-avatar">
