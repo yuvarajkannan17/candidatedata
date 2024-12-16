@@ -1,0 +1,47 @@
+/* ViewCandidate.css */
+.view-candidate-page {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+  }
+  
+  .actions button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .actions button:hover {
+    background-color: #45a049;
+  }
+  
+  .actions button svg {
+    margin-right: 8px;  /* Space between icon and text */
+  }
+  
+  .candidate-details {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .candidate-details p {
+    font-size: 16px;
+    margin: 8px 0;
+  }
+  
+  .candidate-details strong {
+    font-weight: bold;
+  }
+  
