@@ -14,7 +14,7 @@ const App = () => {
         <div className="container " > {/* Bootstrap container for spacing */}
           <Routes>
             <Route path="/" element={<AddCandidate />} />
-            <Route path="/searchcandidate" element={<SearchCandidate />} />
+            <Route path="/search-candidate" element={<SearchCandidate />} />
             <Route path="/viewcandidate" element={<ViewCandidate />} />
           </Routes>
         </div>
