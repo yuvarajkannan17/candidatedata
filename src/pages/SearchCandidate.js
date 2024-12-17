@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../styles/SearchCandidate.css';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
+
 const SearchCandidate = () => {
   const navigate = useNavigate();
   const [candidates, setCandidates] = useState([]);
   const [searchFilters, setSearchFilters] = useState({
-    
     jobTitle: '',
     location: '',
     experience: '',
     skills: '',
     lastUpdated: '',
   });
-
   const [filteredCandidates, setFilteredCandidates] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const candidatesPerPage = 10; // Display 10 candidates per page
 
-  // Fetch candidates from the API
+  // Fetch candidate data
   useEffect(() => {
     const fetchCandidates = async () => {
       try {
-        const response = await axios.get('https://66d97b474ad2f6b8ed54d725.mockapi.io/login');
+        const response = await axios.get(
+          'https://66d97b474ad2f6b8ed54d725.mockapi.io/login'
+        );
         setCandidates(response.data);
-        setFilteredCandidates(response.data); // Initially show all candidates
+        setFilteredCandidates(response.data);
       } catch (error) {
         console.error('Error fetching candidates:', error);
       }
@@ -31,24 +34,56 @@ const SearchCandidate = () => {
     fetchCandidates();
   }, []);
 
-  // Filter candidates based on the search filters
+  // Handle search functionality
   const handleSearch = () => {
     const { jobTitle, location, experience, skills, lastUpdated } = searchFilters;
     const result = candidates.filter((candidate) => {
       return (
-        
-        (!jobTitle || candidate.jobTitle.toLowerCase().includes(jobTitle.toLowerCase())) &&
-        (!location || candidate.currentLocation.toLowerCase().includes(location.toLowerCase())) &&
+        (!jobTitle ||
+          candidate.jobTitle.toLowerCase().includes(jobTitle.toLowerCase())) &&
+        (!location ||
+          candidate.currentLocation.toLowerCase().includes(location.toLowerCase())) &&
         (!experience || candidate.yearsOfExperience.toString().includes(experience)) &&
         (!skills || candidate.skills.toLowerCase().includes(skills.toLowerCase())) &&
-        (!lastUpdated || new Date(candidate.updatedAt).toLocaleDateString().includes(lastUpdated))
+        (!lastUpdated ||
+          new Date(candidate.updatedAt).toLocaleDateString().includes(lastUpdated))
       );
     });
+
     setFilteredCandidates(result);
+    setCurrentPage(1); // Reset to the first page after search
+
+    // Reset search fields
+    setSearchFilters({
+      jobTitle: '',
+      location: '',
+      experience: '',
+      skills: '',
+      lastUpdated: '',
+    });
   };
 
+  // Navigate to candidate view page
   const handleView = (candidate) => {
     navigate('/view-candidate', { state: { candidate } });
+  };
+
+  // Pagination logic
+  const indexOfLastCandidate = currentPage * candidatesPerPage;
+  const indexOfFirstCandidate = indexOfLastCandidate - candidatesPerPage;
+  const currentCandidates = filteredCandidates.slice(
+    indexOfFirstCandidate,
+    indexOfLastCandidate
+  );
+
+  const totalPages = Math.ceil(filteredCandidates.length / candidatesPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
 
   return (
@@ -56,59 +91,48 @@ const SearchCandidate = () => {
       <h2>Search Candidate</h2>
 
       {/* Search Filters */}
-      <div style={{ marginBottom: '20px' }}>
-        
+      <div className="search-filters">
         <input
           type="text"
           placeholder="Search by job title"
           value={searchFilters.jobTitle}
-          onChange={(e) => setSearchFilters({ ...searchFilters, jobTitle: e.target.value })}
-          style={{ padding: '10px', marginRight: '10px', width: '20%' }}
+          onChange={(e) =>
+            setSearchFilters({ ...searchFilters, jobTitle: e.target.value })
+          }
         />
         <input
           type="text"
           placeholder="Search by location"
           value={searchFilters.location}
-          onChange={(e) => setSearchFilters({ ...searchFilters, location: e.target.value })}
-          style={{ padding: '10px', marginRight: '10px', width: '20%' }}
+          onChange={(e) =>
+            setSearchFilters({ ...searchFilters, location: e.target.value })
+          }
         />
         <input
           type="text"
           placeholder="Search by experience"
           value={searchFilters.experience}
-          onChange={(e) => setSearchFilters({ ...searchFilters, experience: e.target.value })}
-          style={{ padding: '10px', marginRight: '10px', width: '20%' }}
+          onChange={(e) =>
+            setSearchFilters({ ...searchFilters, experience: e.target.value })
+          }
         />
         <input
           type="text"
           placeholder="Search by skills"
           value={searchFilters.skills}
-          onChange={(e) => setSearchFilters({ ...searchFilters, skills: e.target.value })}
-          style={{ padding: '10px', marginRight: '10px', width: '20%' }}
+          onChange={(e) =>
+            setSearchFilters({ ...searchFilters, skills: e.target.value })
+          }
         />
         <input
           type="text"
           placeholder="Search by last updated (DD/MM/YYYY)"
           value={searchFilters.lastUpdated}
-          onChange={(e) => setSearchFilters({ ...searchFilters, lastUpdated: e.target.value })}
-          style={{ padding: '10px', marginRight: '10px',marginTop: '10px', width: '20%' }}
+          onChange={(e) =>
+            setSearchFilters({ ...searchFilters, lastUpdated: e.target.value })
+          }
         />
-        
-        {/* Search Button */}
-        <button
-          onClick={handleSearch}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: '#2196F3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            marginLeft: '10px',
-          }}
-        >
-          Search
-        </button>
+        <button onClick={handleSearch}>Search</button>
       </div>
 
       {/* Candidates Table */}
@@ -134,7 +158,7 @@ const SearchCandidate = () => {
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{candidate.currentLocation}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{candidate.skills}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>
-                  {(candidate.lastUpdate)}
+                    {(candidate.updatedAt)}
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>
                   <button
