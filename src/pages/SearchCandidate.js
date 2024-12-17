@@ -48,7 +48,7 @@ const SearchCandidate = () => {
   };
 
   const handleView = (candidate) => {
-    navigate('/viewcandidate', { state: { candidate } });
+    navigate('/view-candidate', { state: { candidate } });
   };
 
   return (
