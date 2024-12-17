@@ -158,7 +158,7 @@ const SearchCandidate = () => {
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{candidate.currentLocation}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>{candidate.skills}</td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>
-                    {(candidate.updatedAt)}
+                    {(candidate.lastUpdate)}
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>
                   <button
