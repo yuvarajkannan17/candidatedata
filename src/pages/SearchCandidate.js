@@ -65,7 +65,7 @@ const SearchCandidate = () => {
 
   // Navigate to candidate view page
   const handleView = (candidate) => {
-    navigate('/viewcandidate', { state: { candidate } });
+    navigate('/view-candidate', { state: { candidate } });
   };
 
   // Pagination logic

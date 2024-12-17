@@ -5,6 +5,7 @@ import AddCandidate from './pages/AddCandidate';
 import Header from './components/Header'; // Header component declared here
 import SearchCandidate from './pages/SearchCandidate';
 import ViewCandidate from './pages/ViewCandidate';
+import EditCandidate from './pages/EditCandidate';
 
 const App = () => {
   return (
@@ -15,7 +16,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<AddCandidate />} />
             <Route path="/search-candidate" element={<SearchCandidate />} />
-            <Route path="/viewcandidate" element={<ViewCandidate />} />
+            <Route path="/view-candidate" element={<ViewCandidate />} />
+            <Route path="/edit-candidate/:id" element={<EditCandidate />} />
           </Routes>
         </div>
       </div>

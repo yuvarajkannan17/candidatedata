@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import FormComponent from '../components/FormComponent';
 import axios from 'axios';
+import { useParams } from "react-router-dom";
 
-const EditCandidate = ({ id }) => {
+const EditCandidate = () => {
+  
   const [candidateData, setCandidateData] = useState(null);
-
+  const { id } = useParams();
   useEffect(() => {
     const fetchCandidateData = async () => {
       try {
@@ -28,7 +30,7 @@ const EditCandidate = ({ id }) => {
   };
 
   return (
-    <div className="edit-candidate-page">
+    <div className="edit-candidate-page" style={{height:"100vh"}}>
       <h2>Edit Candidate</h2>
       {candidateData ? (
         <FormComponent initialValues={candidateData} onSubmit={handleEditSubmit} />

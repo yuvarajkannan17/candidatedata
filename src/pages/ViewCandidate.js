@@ -5,17 +5,20 @@ import '../styles/ViewCandidate.css';
 
 const ViewCandidate = () => {
   const { state } = useLocation();
-  const { candidate } = state;  // Candidate data passed from SearchCandidate
+  const { candidate } = state; 
+  const {id}  =  candidate ;      // Candidate data passed from SearchCandidate
   const navigate = useNavigate();
 
   const handleDownload = () => {
     // Logic for downloading resume (mock function)
     alert('Downloading resume...');
   };
+  console.log("candidate",id)
 
   const handleEdit = () => {
     // Logic to navigate to Edit page (mock function)
-    navigate('/editcandidate', { state: { candidate } });
+    navigate(`/edit-candidate/${id}`);
+    // navigate("/edit-candidate");
   };
 
   const handleDelete = () => {
