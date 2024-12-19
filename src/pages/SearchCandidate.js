@@ -11,8 +11,9 @@ const SearchCandidate = () => {
     emailId: '',
     contactNumber: '',
     jobTitle: '',
-    location: '',
-    experience: '',
+    currentLocation: '',
+    preferredLocation: '',
+    yearsOfExperience: '',
     skills: '',
     lastUpdated: '',
   });
@@ -45,8 +46,9 @@ const SearchCandidate = () => {
       emailId,
       contactNumber,
       jobTitle,
-      location,
-      experience,
+      currentLocation,
+      preferredLocation,
+      yearsOfExperience,
       skills,
       lastUpdated,
     } = searchFilters;
@@ -61,9 +63,15 @@ const SearchCandidate = () => {
           candidate.contactNumber.includes(contactNumber)) &&
         (!jobTitle ||
           candidate.jobTitle.toLowerCase().includes(jobTitle.toLowerCase())) &&
-        (!location ||
-          candidate.currentLocation.toLowerCase().includes(location.toLowerCase())) &&
-        (!experience || candidate.yearsOfExperience.toString().includes(experience)) &&
+        (!currentLocation ||
+          candidate.currentLocation
+            .toLowerCase()
+            .includes(currentLocation.toLowerCase())) &&
+        (!preferredLocation ||
+          candidate.preferredLocation
+            .toLowerCase()
+            .includes(preferredLocation.toLowerCase())) &&
+        (!yearsOfExperience || candidate.yearsOfExperience.toString().includes(yearsOfExperience)) &&
         (!skills || candidate.skills.toLowerCase().includes(skills.toLowerCase())) &&
         (!lastUpdated ||
           new Date(candidate.updatedAt).toLocaleDateString().includes(lastUpdated))
@@ -79,8 +87,9 @@ const SearchCandidate = () => {
       emailId: '',
       contactNumber: '',
       jobTitle: '',
-      location: '',
-      experience: '',
+      currentLocation: '',
+      preferredLocation: '',
+      yearsOfExperience: '',
       skills: '',
       lastUpdated: '',
     });
@@ -152,18 +161,32 @@ const SearchCandidate = () => {
         />
         <input
           type="text"
-          placeholder="Search by location"
-          value={searchFilters.location}
+          placeholder="Search by current location"
+          value={searchFilters.currentLocation}
           onChange={(e) =>
-            setSearchFilters({ ...searchFilters, location: e.target.value })
+            setSearchFilters({
+              ...searchFilters,
+              currentLocation: e.target.value,
+            })
+          }
+        />
+        <input
+          type="text"
+          placeholder="Search by preferred location"
+          value={searchFilters.preferredLocation}
+          onChange={(e) =>
+            setSearchFilters({
+              ...searchFilters,
+              preferredLocation: e.target.value,
+            })
           }
         />
         <input
           type="text"
           placeholder="Search by experience"
-          value={searchFilters.experience}
+          value={searchFilters.yearsOfExperience}
           onChange={(e) =>
-            setSearchFilters({ ...searchFilters, experience: e.target.value })
+            setSearchFilters({ ...searchFilters, yearsOfExperience: e.target.value })
           }
         />
         <input
@@ -197,11 +220,10 @@ const SearchCandidate = () => {
             <th style={{ border: '1px solid #ddd', padding: '10px' }}>Contact Number</th>
             <th style={{ border: '1px solid #ddd', padding: '10px' }}>Job Title</th>
             <th style={{ border: '1px solid #ddd', padding: '10px' }}>Experience</th>
-            <th style={{ border: '1px solid #ddd', padding: '10px' }}>Location</th>
+            <th style={{ border: '1px solid #ddd', padding: '10px' }}>Current Location</th>
+            <th style={{ border: '1px solid #ddd', padding: '10px' }}>Preferred Location</th>
             <th style={{ border: '1px solid #ddd', padding: '10px' }}>Skills</th>
-            <th style={{ border: '1px solid #ddd', padding: '10px' }}>
-              Last Updated
-            </th>
+            <th style={{ border: '1px solid #ddd', padding: '10px' }}>Last Updated</th>
             <th style={{ border: '1px solid #ddd', padding: '10px' }}>Actions</th>
           </tr>
         </thead>
@@ -228,10 +250,13 @@ const SearchCandidate = () => {
                   {candidate.currentLocation}
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>
+                  {candidate.preferredLocation}
+                </td>
+                <td style={{ border: '1px solid #ddd', padding: '10px' }}>
                   {candidate.skills}
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>
-                    {(candidate.lastUpdate)}
+                  {candidate.lastUpdated}
                 </td>
                 <td style={{ border: '1px solid #ddd', padding: '10px' }}>
                   <button
@@ -252,7 +277,7 @@ const SearchCandidate = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="9" style={{ textAlign: 'center', padding: '10px' }}>
+              <td colSpan="10" style={{ textAlign: 'center', padding: '10px' }}>
                 No candidates found
               </td>
             </tr>
