@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FormComponent from '../components/FormComponent';
+import ModalComponent from '../components/ModalComponent';
 import axios from 'axios';
+import "../styles/modalcomponent.css"
 
 const AddCandidate = () => {
+  const [showModal, setShowModal] = useState(false); // Control confirmation modal visibility
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // Control success modal visibility
+  const [formData, setFormData] = useState(null); // Store form data temporarily
+
   const initialValues = {
     name: '',
     jobTitle: '',
@@ -19,69 +25,92 @@ const AddCandidate = () => {
     resume: null,
   };
 
-  const handleAddSubmit = async (values) => {
+  const getCurrentDate = () => {
+    const currentDate = new Date();
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const year = currentDate.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const handleAddSubmit = (values) => {
+    const updatedValues = {
+      ...values,
+      lastUpdate: getCurrentDate(),
+    };
+    setFormData(updatedValues); // Save data temporarily
+    setShowModal(true); // Show confirmation modal
+  };
+
+  const handleConfirmSubmit = async () => {
+    setShowModal(false);
     try {
-      // Generate current date in 'DD-MM-YYYY' format
-      const currentDate = new Date();
-      const day = String(currentDate.getDate()).padStart(2, '0'); // Add leading zero
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is zero-based
-      const year = currentDate.getFullYear();
-      const formattedDate = `${day}-${month}-${year}`;
+      const formDataToSend = new FormData();
 
-      // Add 'lastUpdate' field with the formatted date
-      const updatedValues = {
-        ...values,
-        lastUpdate: formattedDate,
-      };
-
-      if (updatedValues.resume) {
-        const file = updatedValues.resume;
-
-        // Convert the file to Base64
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-
-        reader.onload = async () => {
-          const payload = {
-            ...updatedValues,
-            resume: reader.result, // Base64 encoded file
-          };
-
-          console.log('Candidate added successfully', {
-            ...payload,
-            resume: reader.result.slice(0, 50) + '...', // Display first 50 characters
-          });
-
-          // Send the payload with 'lastUpdate' to the API
-          await axios.post('https://66d97b474ad2f6b8ed54d725.mockapi.io/login', payload, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-        };
-
-        reader.onerror = (error) => {
-          console.error('Error reading file:', error);
-        };
-      } else {
-        // If no file, send data with 'lastUpdate'
-        await axios.post('https://66d97b474ad2f6b8ed54d725.mockapi.io/login', updatedValues, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        console.log('Candidate added successfully', updatedValues);
+      // Append all form data fields to FormData
+      for (const key in formData) {
+        if (key === 'resume' && formData[key]) {
+          formDataToSend.append(key, formData[key]); // Add the file directly
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
       }
+
+      // Log FormData content
+      for (let pair of formDataToSend.entries()) {
+        console.log(`${pair[0]}: ${pair[1]}`);
+      }
+
+      // Make the API call
+      const response = await axios.post(
+        'https://66d97b474ad2f6b8ed54d725.mockapi.io/login',
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      console.log('API Response:', response.data);
+      setShowSuccessModal(true); // Show success modal
     } catch (error) {
-      console.error('Error adding candidate:', error);
+      console.error('Error adding candidate:', error.response ? error.response.data : error.message);
     }
+  };
+
+
+
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
   };
 
   return (
     <div className="add-candidate-page">
       <h2>Add Candidate</h2>
       <FormComponent initialValues={initialValues} onSubmit={handleAddSubmit} />
+
+      <ModalComponent
+        show={showModal}
+        onHide={() => setShowModal(false)} // Close confirmation modal
+        title="Confirm Submission"
+        message="Are you sure you want to submit this candidate data?"
+        onConfirm={handleConfirmSubmit} // Submit form data on confirm
+        confirmLabel="Submit"
+        cancelLabel="Cancel"
+      />
+
+      <ModalComponent
+        show={showSuccessModal}
+        onHide={handleSuccessModalClose}
+        title="Success"
+        message="Candidate data has been submitted successfully!"
+        confirmLabel="OK"
+        icon="/assets/greentikmark.png"
+      />
+
+
+
     </div>
   );
 };

@@ -1,0 +1,21 @@
+.modal-icon {
+    margin: 0 auto;
+    display: block;
+  }
+  
+  .modal-body p {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+  
+  @media (max-width: 576px) {
+    .modal-body p {
+      font-size: 12px; /* Smaller font size for mobile screens */
+    }
+  
+    .modal-icon {
+      width: 60px;
+      height: 60px;
+    }
+  }
+  

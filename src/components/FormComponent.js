@@ -10,9 +10,10 @@ const FormComponent = ({ initialValues, onSubmit }) => {
     yearsOfExperience: Yup.number()
       .required('Years of experience is required')
       .min(0, 'Must be a positive number'),
-    contactNumber: Yup.string()
+      contactNumber: Yup.string()
       .required('Contact number is required')
-      .matches(/^\d{10}$/, 'Must be 10 digits'),
+      .matches(/^\d{10}$/, 'Contact number must be exactly 10 digits'),
+    
     emailId: Yup.string().email('Invalid email format').required('Email is required'),
     currentLocation: Yup.string().required('Current location is required'),
     preferredLocation: Yup.string().required('Preferred location is required'),
@@ -22,6 +23,7 @@ const FormComponent = ({ initialValues, onSubmit }) => {
     skills: Yup.string().required('Skills are required'),
     remarks: Yup.string().required('Remarks are required'),
     resume: Yup.mixed().required('Resume is required'),
+    submitby: Yup.string().required('Submit By is required'),
   });
 
   return (
@@ -224,8 +226,9 @@ const FormComponent = ({ initialValues, onSubmit }) => {
                 <Form.Control.Feedback type="invalid">{errors.remarks}</Form.Control.Feedback>
               </Form.Group>
             </Col>
+            
 
-            <Col xs={12}>
+            <Col xs={12} md={6}>
               <Form.Group controlId="formResume">
                 <Form.Label>Resume</Form.Label>
                 <Form.Control
@@ -236,6 +239,21 @@ const FormComponent = ({ initialValues, onSubmit }) => {
                   isInvalid={touched.resume && !!errors.resume}
                 />
                 <Form.Control.Feedback type="invalid">{errors.resume}</Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+            <Col xs={12} md={6}>
+              <Form.Group controlId="formSubmitBy">
+                <Form.Label>Submit By</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter submit by"
+                  name="submitby"
+                  value={values.submitby}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  isInvalid={touched.submitby && !!errors.submitby}
+                />
+                <Form.Control.Feedback type="invalid">{errors.submitby}</Form.Control.Feedback>
               </Form.Group>
             </Col>
 

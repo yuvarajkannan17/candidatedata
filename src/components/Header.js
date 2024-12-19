@@ -4,7 +4,7 @@ import "../styles/Header.css";
 import { Navbar, Nav, Container } from "react-bootstrap";
 
 const Header = ({ userName }) => {
-  const firstLetter = userName ? userName[0].toUpperCase() : "Y";
+  // const firstLetter = userName ? userName[0].toUpperCase() : "Y";
   const location = useLocation(); // Get the current route
 
   // Function to check if the link is active
