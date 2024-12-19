@@ -3,12 +3,13 @@ import FormComponent from '../components/FormComponent';
 import ModalComponent from '../components/ModalComponent';
 import axios from 'axios';
 import "../styles/modalcomponent.css"
+import { useNavigate } from 'react-router-dom';
 
 const AddCandidate = () => {
   const [showModal, setShowModal] = useState(false); // Control confirmation modal visibility
   const [showSuccessModal, setShowSuccessModal] = useState(false); // Control success modal visibility
   const [formData, setFormData] = useState(null); // Store form data temporarily
-
+  const navigate = useNavigate();
   const initialValues = {
     name: '',
     jobTitle: '',
@@ -23,6 +24,7 @@ const AddCandidate = () => {
     skills: '',
     remarks: '',
     resume: null,
+    submitby:''
   };
 
   const getCurrentDate = () => {
@@ -40,49 +42,70 @@ const AddCandidate = () => {
     };
     setFormData(updatedValues); // Save data temporarily
     setShowModal(true); // Show confirmation modal
+    
   };
-
+  
   const handleConfirmSubmit = async () => {
     setShowModal(false);
+
     try {
-      const formDataToSend = new FormData();
+      
+      if (formData.resume) {
+        const file = formData.resume;
 
-      // Append all form data fields to FormData
-      for (const key in formData) {
-        if (key === 'resume' && formData[key]) {
-          formDataToSend.append(key, formData[key]); // Add the file directly
-        } else {
-          formDataToSend.append(key, formData[key]);
-        }
-      }
+        // Convert the file to Base64
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
 
-      // Log FormData content
-      for (let pair of formDataToSend.entries()) {
-        console.log(`${pair[0]}: ${pair[1]}`);
-      }
+        reader.onload = async () => {
+          const payload = {
+            ...formData,
+            resume: reader.result, // Base64 encoded file
+          };
 
-      // Make the API call
-      const response = await axios.post(
-        'https://66d97b474ad2f6b8ed54d725.mockapi.io/login',
-        formDataToSend,
-        {
+          console.log('Candidate added successfully', {
+            ...payload,
+            resume: reader.result.slice(0, 50) + '...', // Display first 50 characters
+          });
+
+          // Send the payload with 'lastUpdate' to the API
+          await axios.post('https://66d97b474ad2f6b8ed54d725.mockapi.io/login', payload, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+        };
+
+        reader.onerror = (error) => {
+          console.error('Error reading file:', error);
+        };
+        setShowSuccessModal(true);
+      } else {
+        // If no file, send data with 'lastUpdate'
+        await axios.post('https://66d97b474ad2f6b8ed54d725.mockapi.io/login', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/json',
           },
-        }
-      );
+        });
 
-      console.log('API Response:', response.data);
-      setShowSuccessModal(true); // Show success modal
+        console.log('Candidate added successfully', formData);
+        setShowSuccessModal(true);
+      }
     } catch (error) {
-      console.error('Error adding candidate:', error.response ? error.response.data : error.message);
+      console.error('Error adding candidate:', error);
     }
+   
+
   };
+  
+ 
+  
 
 
 
   const handleSuccessModalClose = () => {
     setShowSuccessModal(false);
+    navigate("/search-candidate");
   };
 
   return (
