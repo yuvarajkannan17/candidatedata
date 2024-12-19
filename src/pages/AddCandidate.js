@@ -38,7 +38,7 @@ const AddCandidate = () => {
   const handleAddSubmit = (values) => {
     const updatedValues = {
       ...values,
-      lastUpdate: getCurrentDate(),
+      lastUpdated: getCurrentDate(),
     };
     setFormData(updatedValues); // Save data temporarily
     setShowModal(true); // Show confirmation modal
